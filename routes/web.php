@@ -164,7 +164,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     ]));
 });
 
-Route::prefix('user')->name('user.')->group(function () {
+Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('user.dashboard'));
     Route::get('/dashboard', fn () => view('user.dashboard'));
     Route::get('/explore-places', fn () => view('user.explore-places'));
@@ -175,7 +175,7 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/notifications', fn () => view('user.notifications'));
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', fn () => view('admin'));
     Route::get('/destinations', fn () => view('admin.destinations'));
     Route::get('/events', fn () => view('admin.events'));
@@ -204,10 +204,5 @@ Route::get('/security', function () {
     return view('security');
 });
 
-Route::get('/users', function () {
-    return view('users');
-});
-
-Route::get('/admin', function () {
-    return view('admin');
-});
+Route::get('/users', fn () => redirect()->route('admin.users'))->middleware(['auth', 'role:admin']);
+Route::get('/admin', fn () => redirect()->route('admin.dashboard'))->middleware(['auth', 'role:admin']);

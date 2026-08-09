@@ -453,7 +453,7 @@
 <header class="nav">
   <div class="nav-inner">
     <a href="/" class="brand" aria-label="BaliTour Home">
-      <img src="/Logo/BTLogo.png" alt="BaliTour Logo" class="header-logo">
+      <img src="/Logo/BaliTourLogo.png" alt="BaliTour Logo" class="header-logo">
     </a>
     <nav class="links" aria-label="Primary navigation">
       <a href="#about">About</a>
