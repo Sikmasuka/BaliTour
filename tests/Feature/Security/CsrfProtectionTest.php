@@ -3,10 +3,12 @@
 namespace Tests\Feature\Security;
 
 use App\Models\User;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
-class CsrfProtectionTest extends \Tests\TestCase
+class CsrfProtectionTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -16,7 +18,7 @@ class CsrfProtectionTest extends \Tests\TestCase
     public function test_post_request_without_csrf_token_is_blocked(): void
     {
         // Disable automatic CSRF handling in test helper to test real CSRF protection
-        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+        $this->withoutMiddleware(ValidateCsrfToken::class);
 
         $user = User::factory()->create([
             'username' => 'juancsrftest',

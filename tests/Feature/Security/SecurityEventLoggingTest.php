@@ -97,13 +97,13 @@ class SecurityEventLoggingTest extends TestCase
         Log::shouldReceive('error')->zeroOrMoreTimes();
 
         $this->post('/register', [
-            'first_name'            => 'Security',
-            'last_name'             => 'Auditor',
-            'mobile_number'         => '09171239999',
-            'barangay'              => 'Poblacion',
-            'email'                 => 'auditor@example.com',
-            'username'              => 'secauditor',
-            'password'              => 'B@liT0urs#2026!',
+            'first_name' => 'Security',
+            'last_name' => 'Auditor',
+            'mobile_number' => '09171239999',
+            'barangay' => 'Poblacion',
+            'email' => 'auditor@example.com',
+            'username' => 'secauditor',
+            'password' => 'B@liT0urs#2026!',
             'password_confirmation' => 'B@liT0urs#2026!',
         ]);
     }
@@ -156,12 +156,12 @@ class SecurityEventLoggingTest extends TestCase
         ]);
 
         $this->actingAs($admin)->post('/admin/destinations', [
-            'name'         => 'Logged Nature Park',
-            'description'  => 'A park created to verify audit logging.',
-            'category'     => 'falls_nature',
-            'address'      => 'Balingasag, Misamis Oriental',
-            'latitude'     => 8.7450,
-            'longitude'    => 124.7800,
+            'name' => 'Logged Nature Park',
+            'description' => 'A park created to verify audit logging.',
+            'category' => 'falls_nature',
+            'address' => 'Balingasag, Misamis Oriental',
+            'latitude' => 8.7450,
+            'longitude' => 124.7800,
             'is_published' => true,
         ]);
     }

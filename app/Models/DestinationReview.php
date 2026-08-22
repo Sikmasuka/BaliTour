@@ -43,8 +43,10 @@ class DestinationReview extends Model
     {
         if ($this->user && $this->user->touristProfile) {
             $profile = $this->user->touristProfile;
-            return trim($profile->first_name . ' ' . $profile->last_name) ?: $this->user->username ?? 'Community Traveler';
+
+            return trim($profile->first_name.' '.$profile->last_name) ?: $this->user->username ?? 'Community Traveler';
         }
+
         return $this->user->username ?? 'Community Traveler';
     }
 }

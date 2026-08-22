@@ -51,7 +51,7 @@ class TouristDestination extends Model
 
         static::creating(function ($model) {
             if (empty($model->slug)) {
-                $model->slug = Str::slug($model->name) . '-' . Str::random(5);
+                $model->slug = Str::slug($model->name).'-'.Str::random(5);
             }
         });
     }
@@ -108,6 +108,7 @@ class TouristDestination extends Model
         if (empty($this->entrance_fee) || $this->entrance_fee <= 0) {
             return 'Free Entrance';
         }
-        return '₱' . number_format($this->entrance_fee, 2);
+
+        return '₱'.number_format($this->entrance_fee, 2);
     }
 }

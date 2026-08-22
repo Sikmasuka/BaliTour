@@ -18,9 +18,9 @@ class MassAssignmentProtectionTest extends TestCase
     {
         $user = User::create([
             'username' => 'regularuser',
-            'email'    => 'regular@example.com',
+            'email' => 'regular@example.com',
             'password' => Hash::make('B@liT0urs#2026!'),
-            'role'     => 'admin', // Attempted mass assignment
+            'role' => 'admin', // Attempted mass assignment
         ]);
 
         $this->assertNotEquals('admin', $user->fresh()->role);
@@ -32,15 +32,15 @@ class MassAssignmentProtectionTest extends TestCase
     public function test_registration_request_cannot_inject_admin_role(): void
     {
         $response = $this->post('/register', [
-            'first_name'            => 'John',
-            'last_name'             => 'Doe',
-            'mobile_number'         => '09171234567',
-            'barangay'              => 'Poblacion',
-            'email'                 => 'johndoe@example.com',
-            'username'              => 'johndoe',
-            'password'              => 'B@liT0urs#2026!',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'mobile_number' => '09171234567',
+            'barangay' => 'Poblacion',
+            'email' => 'johndoe@example.com',
+            'username' => 'johndoe',
+            'password' => 'B@liT0urs#2026!',
             'password_confirmation' => 'B@liT0urs#2026!',
-            'role'                  => 'admin', // Injected privilege escalation field
+            'role' => 'admin', // Injected privilege escalation field
         ]);
 
         $response->assertRedirect('/user/dashboard');

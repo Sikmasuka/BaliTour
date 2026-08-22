@@ -7,7 +7,6 @@ use App\Models\DestinationReview;
 use App\Models\TouristDestination;
 use App\Models\VisitPlan;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class DestinationService
@@ -21,17 +20,17 @@ class DestinationService
             ->with(['media', 'reviews.user.touristProfile'])
             ->where('is_published', true);
 
-        if (!empty($filters['category']) && $filters['category'] !== 'all') {
+        if (! empty($filters['category']) && $filters['category'] !== 'all') {
             $query->where('category', $filters['category']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('short_description', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%");
             });
         }
 
@@ -46,14 +45,14 @@ class DestinationService
         $query = TouristDestination::query()
             ->with(['media', 'reviews', 'creator']);
 
-        if (!empty($filters['category']) && $filters['category'] !== 'all') {
+        if (! empty($filters['category']) && $filters['category'] !== 'all') {
             $query->where('category', $filters['category']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
+                ->orWhere('address', 'like', "%{$search}%");
         }
 
         return $query->latest()->paginate($perPage)->withQueryString();
@@ -88,22 +87,22 @@ class DestinationService
         unset($data['gallery_urls']);
 
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']) . '-' . Str::random(5);
+            $data['slug'] = Str::slug($data['name']).'-'.Str::random(5);
         }
 
         $destination = TouristDestination::create($data);
 
         // Store gallery images
-        if (!empty($galleryUrls)) {
+        if (! empty($galleryUrls)) {
             foreach ($galleryUrls as $order => $url) {
-                if (!empty($url)) {
+                if (! empty($url)) {
                     DestinationMedia::create([
                         'destination_id' => $destination->id,
                         'uploaded_by' => $userId,
                         'type' => 'image',
                         'source' => 'upload',
                         'file_path' => $url,
-                        'title' => $destination->name . ' Photo ' . ($order + 1),
+                        'title' => $destination->name.' Photo '.($order + 1),
                         'sort_order' => $order,
                     ]);
                 }
@@ -126,14 +125,14 @@ class DestinationService
         if ($galleryUrls !== null) {
             $destination->media()->delete();
             foreach ($galleryUrls as $order => $url) {
-                if (!empty($url)) {
+                if (! empty($url)) {
                     DestinationMedia::create([
                         'destination_id' => $destination->id,
                         'uploaded_by' => auth()->id(),
                         'type' => 'image',
                         'source' => 'upload',
                         'file_path' => $url,
-                        'title' => $destination->name . ' Photo ' . ($order + 1),
+                        'title' => $destination->name.' Photo '.($order + 1),
                         'sort_order' => $order,
                     ]);
                 }

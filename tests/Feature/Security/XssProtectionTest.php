@@ -43,7 +43,7 @@ class XssProtectionTest extends TestCase
         ]);
 
         $xssComment = '<img src="invalid-image" onerror="alert(document.cookie)"> Nice place!';
-        
+
         $this->actingAs($user)->post(route('destinations.reviews.store', $destination->slug), [
             'rating' => 5,
             'title' => '<script>alert("xss-title")</script>',

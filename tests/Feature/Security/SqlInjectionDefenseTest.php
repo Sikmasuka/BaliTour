@@ -72,7 +72,7 @@ class SqlInjectionDefenseTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'username' => 'sqli_test',
-            'email'    => 'sqli.test@example.com',
+            'email' => 'sqli.test@example.com',
         ]);
     }
 }

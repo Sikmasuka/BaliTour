@@ -18,8 +18,8 @@ class UnpublishedDestinationGuardTest extends TestCase
     public function test_published_destination_is_viewable_publicly(): void
     {
         $destination = TouristDestination::factory()->create([
-            'name'         => 'Kabatanga Falls',
-            'slug'         => 'kabatanga-falls',
+            'name' => 'Kabatanga Falls',
+            'slug' => 'kabatanga-falls',
             'is_published' => true,
         ]);
 
@@ -34,8 +34,8 @@ class UnpublishedDestinationGuardTest extends TestCase
     public function test_unpublished_destination_returns_404_for_guest(): void
     {
         $destination = TouristDestination::factory()->create([
-            'name'         => 'Secret Hidden Draft Cave',
-            'slug'         => 'secret-hidden-draft-cave',
+            'name' => 'Secret Hidden Draft Cave',
+            'slug' => 'secret-hidden-draft-cave',
             'is_published' => false,
         ]);
 
@@ -54,8 +54,8 @@ class UnpublishedDestinationGuardTest extends TestCase
         ]);
 
         $destination = TouristDestination::factory()->create([
-            'name'         => 'Draft Beach Resort',
-            'slug'         => 'draft-beach-resort',
+            'name' => 'Draft Beach Resort',
+            'slug' => 'draft-beach-resort',
             'is_published' => false,
         ]);
 
@@ -70,8 +70,8 @@ class UnpublishedDestinationGuardTest extends TestCase
     public function test_service_find_by_slug_respects_admin_mode(): void
     {
         $destination = TouristDestination::factory()->create([
-            'name'         => 'Admin Only Draft',
-            'slug'         => 'admin-only-draft',
+            'name' => 'Admin Only Draft',
+            'slug' => 'admin-only-draft',
             'is_published' => false,
         ]);
 

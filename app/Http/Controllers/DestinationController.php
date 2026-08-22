@@ -45,7 +45,7 @@ class DestinationController extends Controller
             'other' => '📍 Landmark',
         ];
 
-        $mapDestinations = \App\Models\TouristDestination::query()
+        $mapDestinations = TouristDestination::query()
             ->with(['reviews'])
             ->where('is_published', true)
             ->whereNotNull('latitude')

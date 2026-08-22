@@ -2,16 +2,15 @@
 
 namespace Tests\Feature\Security;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Illuminate\Support\Facades\RateLimiter;
+use Tests\TestCase;
 
 class RegistrationRateLimitingTest extends TestCase
 {
     use RefreshDatabase;
 
-     protected function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         // Clears any leftover stamps before each test runs
@@ -24,20 +23,20 @@ class RegistrationRateLimitingTest extends TestCase
     public function test_registration_allowed_within_rate_limit(): void
     {
         $response = $this->post('/register', [
-            'first_name'            => 'Maria',
-            'last_name'             => 'Santos',
-            'mobile_number'         => '09171234567',
-            'barangay'              => 'Poblacion',
-            'email'                 => 'maria.rate@example.com',
-            'username'              => 'mariarate',
-            'password'              => 'B@liT0urs#2026!',
+            'first_name' => 'Maria',
+            'last_name' => 'Santos',
+            'mobile_number' => '09171234567',
+            'barangay' => 'Poblacion',
+            'email' => 'maria.rate@example.com',
+            'username' => 'mariarate',
+            'password' => 'B@liT0urs#2026!',
             'password_confirmation' => 'B@liT0urs#2026!',
         ]);
 
         $response->assertRedirect('/user/dashboard');
         $this->assertDatabaseHas('users', [
             'username' => 'mariarate',
-            'email'    => 'maria.rate@example.com',
+            'email' => 'maria.rate@example.com',
         ]);
     }
 

@@ -16,7 +16,6 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-
     /**
      * Handle an incoming authentication request using the users table with per-user rate limiting.
      */
@@ -37,8 +36,8 @@ class AuthController extends Controller
             $seconds = RateLimiter::availableIn($throttleKey);
 
             Log::channel('security')->warning('AUTH_LOCKOUT_BLOCKED', [
-                'username'  => $credentials['username'],
-                'ip'        => $request->ip(),
+                'username' => $credentials['username'],
+                'ip' => $request->ip(),
                 'locked_for_seconds' => $seconds,
             ]);
 
@@ -55,8 +54,8 @@ class AuthController extends Controller
                 'login_error' => 'Account temporarily locked.',
                 'username' => 'Account locked.',
             ])->with('lockout_seconds', $seconds)
-              ->with('is_locked', true)
-              ->onlyInput('username');
+                ->with('is_locked', true)
+                ->onlyInput('username');
         }
 
         if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']], $request->boolean('remember'))) {
@@ -69,10 +68,10 @@ class AuthController extends Controller
             $user->update(['last_login_at' => now()]);
 
             Log::channel('security')->info('AUTH_LOGIN_SUCCESS', [
-                'user_id'    => $user->id,
-                'username'   => $user->username,
-                'role'       => $user->role,
-                'ip'         => $request->ip(),
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'role' => $user->role,
+                'ip' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
 
@@ -99,7 +98,7 @@ class AuthController extends Controller
                     'title' => 'Welcome Back, Admin!',
                     'message' => "Signed in successfully as {$user->username}. Administrative controls are now accessible.",
                     'name' => $userName,
-                    'role' => 'Administrator'
+                    'role' => 'Administrator',
                 ]);
             }
 
@@ -107,7 +106,7 @@ class AuthController extends Controller
                 'title' => 'Welcome Back!',
                 'message' => "Glad to see you, {$userName}! Enjoy exploring Balingasag's attractions, tours, and events.",
                 'name' => $userName,
-                'role' => 'Tourist'
+                'role' => 'Tourist',
             ]);
         }
 
@@ -117,7 +116,7 @@ class AuthController extends Controller
 
         Log::channel('security')->warning('AUTH_LOGIN_FAILED', [
             'username' => $credentials['username'],
-            'ip'       => $request->ip(),
+            'ip' => $request->ip(),
             'attempts' => $attemptsAfter,
         ]);
 
@@ -125,10 +124,10 @@ class AuthController extends Controller
             $seconds = RateLimiter::availableIn($throttleKey);
 
             Log::channel('security')->warning('AUTH_ACCOUNT_LOCKED', [
-                'username'           => $credentials['username'],
-                'ip'                 => $request->ip(),
+                'username' => $credentials['username'],
+                'ip' => $request->ip(),
                 'locked_for_seconds' => $seconds,
-                'total_attempts'     => $attemptsAfter,
+                'total_attempts' => $attemptsAfter,
             ]);
 
             if ($request->expectsJson()) {
@@ -144,8 +143,8 @@ class AuthController extends Controller
                 'login_error' => 'Account temporarily locked.',
                 'username' => 'Account locked.',
             ])->with('lockout_seconds', $seconds)
-              ->with('is_locked', true)
-              ->onlyInput('username');
+                ->with('is_locked', true)
+                ->onlyInput('username');
         }
 
         if ($request->expectsJson()) {
@@ -169,7 +168,6 @@ class AuthController extends Controller
         return Str::transliterate(Str::lower($login));
     }
 
-
     /**
      * Handle an incoming registration request and store user in the users table and tourist profile.
      */
@@ -180,21 +178,21 @@ class AuthController extends Controller
         $user = DB::transaction(function () use ($validated) {
             $user = User::create([
                 'username' => $validated['username'],
-                'email'    => $validated['email'],
+                'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
-                'role'     => 'tourist',
-                'status'   => 'active',
+                'role' => 'tourist',
+                'status' => 'active',
             ]);
 
             TouristProfile::create([
-                'user_id'           => $user->id,
-                'first_name'        => $validated['first_name'],
-                'middle_name'       => $validated['middle_name'] ?? null,
-                'last_name'         => $validated['last_name'],
-                'mobile_number'     => $validated['mobile_number'],
+                'user_id' => $user->id,
+                'first_name' => $validated['first_name'],
+                'middle_name' => $validated['middle_name'] ?? null,
+                'last_name' => $validated['last_name'],
+                'mobile_number' => $validated['mobile_number'],
                 'city_municipality' => 'Balingasag',
-                'province'          => 'Misamis Oriental',
-                'barangay'          => $validated['barangay'],
+                'province' => 'Misamis Oriental',
+                'barangay' => $validated['barangay'],
             ]);
 
             return $user;
@@ -204,10 +202,10 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         Log::channel('security')->info('AUTH_REGISTER_SUCCESS', [
-            'user_id'    => $user->id,
-            'username'   => $user->username,
-            'email'      => $user->email,
-            'ip'         => $request->ip(),
+            'user_id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+            'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
 
@@ -229,7 +227,7 @@ class AuthController extends Controller
             'title' => 'Account Created Successfully!',
             'message' => "Welcome to BaliTour, {$validated['first_name']}! Your traveler account is ready to explore.",
             'name' => $validated['first_name'],
-            'role' => 'Tourist'
+            'role' => 'Tourist',
         ]);
     }
 
@@ -242,9 +240,9 @@ class AuthController extends Controller
         $user = Auth::user();
 
         Log::channel('security')->info('AUTH_LOGOUT', [
-            'user_id'  => $user?->id,
+            'user_id' => $user?->id,
             'username' => $user?->username,
-            'ip'       => $request->ip(),
+            'ip' => $request->ip(),
         ]);
 
         Auth::logout();
@@ -263,4 +261,3 @@ class AuthController extends Controller
         return redirect('/');
     }
 }
-

@@ -125,10 +125,10 @@ return [
         // future controller that needs a tamper-visible security audit trail.
         // ─────────────────────────────────────────────────────────────────
         'security' => [
-            'driver'              => 'daily',
-            'path'                => storage_path('logs/security.log'),
-            'level'               => 'debug',
-            'days'                => 90,
+            'driver' => 'daily',
+            'path' => storage_path('logs/security.log'),
+            'level' => 'debug',
+            'days' => 90,
             'replace_placeholders' => true,
         ],
 

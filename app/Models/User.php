@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,17 +60,17 @@ class User extends Authenticatable
         return $this->hasOne(TouristProfile::class);
     }
 
-    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(DestinationReview::class, 'user_id');
     }
 
-    public function visitPlans(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function visitPlans(): HasMany
     {
         return $this->hasMany(VisitPlan::class, 'user_id');
     }
 
-    public function destinations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function destinations(): HasMany
     {
         return $this->hasMany(TouristDestination::class, 'created_by');
     }

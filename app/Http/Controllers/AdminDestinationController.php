@@ -72,10 +72,10 @@ class AdminDestinationController extends Controller
         );
 
         Log::channel('security')->info('ADMIN_DESTINATION_CREATED', [
-            'admin_id'         => auth()->id(),
-            'destination_id'   => $destination->id,
+            'admin_id' => auth()->id(),
+            'destination_id' => $destination->id,
             'destination_name' => $destination->name,
-            'ip'               => $request->ip(),
+            'ip' => $request->ip(),
         ]);
 
         if ($request->wantsJson()) {
@@ -102,10 +102,10 @@ class AdminDestinationController extends Controller
         );
 
         Log::channel('security')->info('ADMIN_DESTINATION_UPDATED', [
-            'admin_id'         => auth()->id(),
-            'destination_id'   => $destination->id,
+            'admin_id' => auth()->id(),
+            'destination_id' => $destination->id,
             'destination_name' => $destination->name,
-            'ip'               => $request->ip(),
+            'ip' => $request->ip(),
         ]);
 
         if ($request->wantsJson()) {
@@ -131,10 +131,10 @@ class AdminDestinationController extends Controller
         $this->destinationService->deleteDestination($destination);
 
         Log::channel('security')->warning('ADMIN_DESTINATION_DELETED', [
-            'admin_id'         => auth()->id(),
-            'destination_id'   => $destinationId,
+            'admin_id' => auth()->id(),
+            'destination_id' => $destinationId,
             'destination_name' => $name,
-            'ip'               => request()->ip(),
+            'ip' => request()->ip(),
         ]);
 
         if (request()->wantsJson()) {

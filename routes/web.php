@@ -64,6 +64,7 @@ Route::prefix('public')->name('public.')->group(function () {
         if ($slug === 'kabatanga-falls' || $slug === 'prototype') {
             return view('prototype.destination-detail');
         }
+
         return renderPage([
             'title' => 'Destination Details',
             'eyebrow' => 'Destination',
@@ -135,8 +136,6 @@ Route::prefix('public')->name('public.')->group(function () {
     ]));
 });
 
-
-
 Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('user.dashboard'));
     Route::get('/dashboard', fn () => view('tourist.dashboard.index'));
@@ -165,8 +164,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/settings', fn () => view('admin.settings.index'));
 });
 
-
-
 // Authentication — login/register UI is handled via modal on the homepage.
 // GET /login redirects to homepage so Laravel's auth middleware redirect still works.
 Route::get('/login', fn () => redirect('/'))->name('login');
@@ -175,12 +172,10 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:20
 Route::post('/register', [AuthController::class, 'register'])->name('register')->middleware('throttle:8,1');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-
-
 Route::get('/users', fn () => redirect()->route('admin.users'))->middleware(['auth', 'role:admin']);
 Route::get('/admin', fn () => redirect()->route('admin.dashboard'))->middleware(['auth', 'role:admin']);
 
 // Error Page Testing Routes — gated behind admin auth (no public access).
 Route::get('/test-error/{code}', function ($code) {
-    abort((int)$code);
+    abort((int) $code);
 })->middleware(['auth', 'role:admin']);

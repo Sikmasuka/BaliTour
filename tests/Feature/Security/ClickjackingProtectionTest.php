@@ -3,8 +3,9 @@
 namespace Tests\Feature\Security;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-class ClickjackingProtectionTest extends \Tests\TestCase
+class ClickjackingProtectionTest extends TestCase
 {
     use RefreshDatabase;
 

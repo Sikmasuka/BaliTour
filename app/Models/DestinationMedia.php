@@ -56,6 +56,6 @@ class DestinationMedia extends Model
             return $this->file_path;
         }
 
-        return asset('storage/' . $this->file_path);
+        return asset('storage/'.$this->file_path);
     }
 }

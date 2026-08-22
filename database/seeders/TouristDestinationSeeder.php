@@ -7,7 +7,6 @@ use App\Models\DestinationReview;
 use App\Models\TouristDestination;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class TouristDestinationSeeder extends Seeder
 {
