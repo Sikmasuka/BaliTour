@@ -19,7 +19,7 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->get('/login');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/');
     }
 
     /**
@@ -28,12 +28,13 @@ class AuthenticationTest extends TestCase
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create([
+            'username' => 'juandelacruz',
             'email' => 'juan.delacruz@example.com',
             'password' => Hash::make('Secret123!'),
         ]);
 
         $response = $this->post('/login', [
-            'login' => 'juan.delacruz@example.com',
+            'username' => 'juandelacruz',
             'password' => 'Secret123!',
         ]);
 
@@ -50,17 +51,18 @@ class AuthenticationTest extends TestCase
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create([
+            'username' => 'juandelacruz',
             'email' => 'juan.delacruz@example.com',
             'password' => Hash::make('Secret123!'),
         ]);
 
         $response = $this->post('/login', [
-            'login' => 'juan.delacruz@example.com',
+            'username' => 'juandelacruz',
             'password' => 'WrongPassword',
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors('login');
+        $response->assertSessionHasErrors('username');
     }
 
     /**
@@ -69,12 +71,12 @@ class AuthenticationTest extends TestCase
     public function test_users_can_not_authenticate_with_missing_credentials(): void
     {
         $response = $this->post('/login', [
-            'login' => '',
+            'username' => '',
             'password' => '',
         ]);
 
         $this->assertGuest();
-        $response->assertSessionHasErrors(['login', 'password']);
+        $response->assertSessionHasErrors(['username', 'password']);
     }
 
     /**
@@ -84,7 +86,7 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->get('/register');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/');
     }
 
     /**
@@ -99,6 +101,7 @@ class AuthenticationTest extends TestCase
             'mobile_number' => '09171234567',
             'barangay' => 'Poblacion',
             'email' => 'maria.santos@example.com',
+            'username' => 'mariasantos',
             'password' => 'B@liT0urs#2026!P@ss',
             'password_confirmation' => 'B@liT0urs#2026!P@ss',
         ]);
@@ -107,12 +110,13 @@ class AuthenticationTest extends TestCase
 
         // Verify User was created
         $this->assertDatabaseHas('users', [
+            'username' => 'mariasantos',
             'email' => 'maria.santos@example.com',
             'role' => 'tourist',
             'status' => 'active',
         ]);
 
-        $user = User::where('email', 'maria.santos@example.com')->first();
+        $user = User::where('username', 'mariasantos')->first();
         $this->assertNotNull($user);
         $this->assertAuthenticatedAs($user);
 
@@ -136,6 +140,7 @@ class AuthenticationTest extends TestCase
     {
         User::factory()->create([
             'email' => 'existing.user@example.com',
+            'username' => 'existinguser',
         ]);
 
         $response = $this->post('/register', [
@@ -144,12 +149,38 @@ class AuthenticationTest extends TestCase
             'mobile_number' => '09189876543',
             'barangay' => 'Hermano',
             'email' => 'existing.user@example.com',
+            'username' => 'newuser',
             'password' => 'SecurePass123!',
             'password_confirmation' => 'SecurePass123!',
         ]);
 
         $this->assertGuest();
         $response->assertSessionHasErrors('email');
+    }
+
+    /**
+     * Test registration failure when using an already registered username.
+     */
+    public function test_registration_fails_with_duplicate_username(): void
+    {
+        User::factory()->create([
+            'email' => 'user1@example.com',
+            'username' => 'takenusername',
+        ]);
+
+        $response = $this->post('/register', [
+            'first_name' => 'Pedro',
+            'last_name' => 'Penduko',
+            'mobile_number' => '09189876543',
+            'barangay' => 'Hermano',
+            'email' => 'user2@example.com',
+            'username' => 'takenusername',
+            'password' => 'SecurePass123!',
+            'password_confirmation' => 'SecurePass123!',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors('username');
     }
 
     /**
@@ -163,6 +194,7 @@ class AuthenticationTest extends TestCase
             'mobile_number' => '09189876543',
             'barangay' => 'Hermano',
             'email' => 'pedro.penduko@example.com',
+            'username' => 'pedropenduko',
             'password' => 'SecurePass123!',
             'password_confirmation' => 'MismatchPassword',
         ]);
@@ -185,6 +217,7 @@ class AuthenticationTest extends TestCase
             'mobile_number',
             'barangay',
             'email',
+            'username',
             'password',
         ]);
     }

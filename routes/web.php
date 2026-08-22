@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminDestinationController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DestinationController;
 use Illuminate\Support\Facades\Route;
 
 if (! function_exists('renderPage')) {
@@ -13,6 +15,14 @@ if (! function_exists('renderPage')) {
 Route::get('/', function () {
     return view('index');
 });
+
+// Tourist Destination Routes
+Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
+Route::get('/destinations/{slug}', [DestinationController::class, 'show'])->name('destinations.show');
+Route::post('/destinations/{slug}/reviews', [DestinationController::class, 'storeReview'])->name('destinations.reviews.store')->middleware('auth');
+Route::post('/destinations/{slug}/visit-plans', [DestinationController::class, 'storeVisitPlan'])->name('destinations.visit-plans.store')->middleware('auth');
+
+Route::get('/prototype/destination', fn () => view('prototype.destination-detail'))->name('prototype.destination');
 
 Route::prefix('public')->name('public.')->group(function () {
     Route::get('/home', fn () => renderPage([
@@ -51,6 +61,9 @@ Route::prefix('public')->name('public.')->group(function () {
     ]));
 
     Route::get('/destinations/{slug}', function ($slug) {
+        if ($slug === 'kabatanga-falls' || $slug === 'prototype') {
+            return view('prototype.destination-detail');
+        }
         return renderPage([
             'title' => 'Destination Details',
             'eyebrow' => 'Destination',
@@ -63,6 +76,8 @@ Route::prefix('public')->name('public.')->group(function () {
             'note' => 'Use this destination detail page to show a specific itinerary, galleries, or booking call-to-action.',
         ]);
     });
+
+    Route::get('/prototype/destination', fn () => view('prototype.destination-detail'))->name('prototype.destination');
 
     Route::get('/events', fn () => renderPage([
         'title' => 'Events',
@@ -120,89 +135,52 @@ Route::prefix('public')->name('public.')->group(function () {
     ]));
 });
 
-Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('/login', fn () => renderPage([
-        'title' => 'Login',
-        'eyebrow' => 'Authentication',
-        'intro' => 'Sign in to access your account, bookings, and personalized recommendations.',
-        'cards' => [
-            ['title' => 'Secure Login', 'description' => 'Use your credentials to sign in safely.'],
-            ['title' => 'Password Recovery', 'description' => 'Reset access if you forget your password.'],
-        ],
-        'note' => 'This page is a placeholder for the future authenticated sign-in flow.',
-    ]));
 
-    Route::get('/register', fn () => renderPage([
-        'title' => 'Register',
-        'eyebrow' => 'Authentication',
-        'intro' => 'Create a new account to manage trips, bookmarks, and reviews.',
-        'cards' => [
-            ['title' => 'Create Account', 'description' => 'Register with your email and a secure password.'],
-            ['title' => 'Account Benefits', 'description' => 'Save favorites, review trips, and receive updates.'],
-        ],
-        'note' => 'A simple registration placeholder. Add validation and secure backend logic later.',
-    ]));
-
-    Route::get('/forgot-password', fn () => renderPage([
-        'title' => 'Forgot Password',
-        'eyebrow' => 'Authentication',
-        'intro' => 'Request a password reset link if you cannot sign in.',
-        'cards' => [
-            ['title' => 'Reset Instructions', 'description' => 'Enter your email to receive secure password reset instructions.'],
-            ['title' => 'Account Protection', 'description' => 'Learn how we protect your account and credentials.'],
-        ],
-    ]));
-
-    Route::get('/verify-email', fn () => renderPage([
-        'title' => 'Verify Email',
-        'eyebrow' => 'Authentication',
-        'intro' => 'Confirm your email address to complete account setup and enable secure access.',
-        'cards' => [
-            ['title' => 'Email Confirmation', 'description' => 'A verification link has been sent to your email address.'],
-            ['title' => 'Security Best Practices', 'description' => 'Keep your account safe with strong password and email verification.'],
-        ],
-    ]));
-});
 
 Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('user.dashboard'));
-    Route::get('/dashboard', fn () => view('user.dashboard'));
-    Route::get('/explore-places', fn () => view('user.explore-places'));
-    Route::get('/edit-profile', fn () => view('user.edit-profile'));
-    Route::get('/bookmarks', fn () => view('user.bookmarks'));
-    Route::get('/booking-history', fn () => view('user.booking-history'));
-    Route::get('/reviews', fn () => view('user.reviews'));
-    Route::get('/notifications', fn () => view('user.notifications'));
+    Route::get('/dashboard', fn () => view('tourist.dashboard.index'));
+    Route::get('/explore-places', [DestinationController::class, 'index'])->name('explore-places');
+    Route::get('/edit-profile', fn () => view('tourist.edit-profile.index'));
+    Route::get('/bookmarks', fn () => view('tourist.bookmarks.index'));
+    Route::get('/booking-history', fn () => view('tourist.travel-list.index'));
+    Route::get('/reviews', fn () => view('tourist.reviews.index'));
+    Route::get('/notifications', fn () => view('tourist.notifications.index'));
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', fn () => view('admin'));
-    Route::get('/destinations', fn () => view('admin.destinations'));
-    Route::get('/events', fn () => view('admin.events'));
-    Route::get('/reviews', fn () => view('admin.reviews'));
-    Route::get('/users', fn () => view('admin.users'));
-    Route::get('/bookings', fn () => view('admin.bookings'));
-    Route::get('/messages', fn () => view('admin.messages'));
-    Route::get('/balingasag-gallery', fn () => view('admin.balingasag-gallery'));
-    Route::get('/system-logs', fn () => view('admin.system-logs'));
-    Route::get('/security-logs', fn () => view('admin.security-logs'));
-    Route::get('/settings', fn () => view('admin.settings'));
+    Route::get('/dashboard', fn () => view('admin.dashboard.index'));
+    Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations');
+    Route::post('/destinations', [AdminDestinationController::class, 'store'])->name('destinations.store');
+    Route::put('/destinations/{id}', [AdminDestinationController::class, 'update'])->name('destinations.update');
+    Route::delete('/destinations/{id}', [AdminDestinationController::class, 'destroy'])->name('destinations.destroy');
+    Route::get('/events', fn () => view('admin.events.index'));
+    Route::get('/reviews', fn () => view('admin.reviews.index'));
+    Route::get('/users', fn () => view('admin.users.index'));
+    Route::get('/bookings', fn () => view('admin.bookings.index'));
+    Route::get('/messages', fn () => view('admin.messages.index'));
+    Route::get('/balingasag-gallery', fn () => view('admin.balingasag-gallery.index'));
+    Route::get('/system-logs', fn () => view('admin.system-logs.index'));
+    Route::get('/security-logs', fn () => view('admin.security-logs.index'));
+    Route::get('/settings', fn () => view('admin.settings.index'));
 });
 
-Route::get('/presentation', function () {
-    return view('presentation');
-});
 
-// Authentication
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/security', function () {
-    return view('security');
-});
+// Authentication — login/register UI is handled via modal on the homepage.
+// GET /login redirects to homepage so Laravel's auth middleware redirect still works.
+Route::get('/login', fn () => redirect('/'))->name('login');
+Route::get('/register', fn () => redirect('/'));
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:20,1');
+Route::post('/register', [AuthController::class, 'register'])->name('register')->middleware('throttle:8,1');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+
 
 Route::get('/users', fn () => redirect()->route('admin.users'))->middleware(['auth', 'role:admin']);
 Route::get('/admin', fn () => redirect()->route('admin.dashboard'))->middleware(['auth', 'role:admin']);
+
+// Error Page Testing Routes — gated behind admin auth (no public access).
+Route::get('/test-error/{code}', function ($code) {
+    abort((int)$code);
+})->middleware(['auth', 'role:admin']);

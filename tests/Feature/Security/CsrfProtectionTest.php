@@ -19,12 +19,12 @@ class CsrfProtectionTest extends \Tests\TestCase
         $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
 
         $user = User::factory()->create([
-            'email' => 'juan.csrf@example.com',
+            'username' => 'juancsrftest',
             'password' => Hash::make('B@liT0urs#2026!P@ss'),
         ]);
 
         $response = $this->post('/login', [
-            'login' => 'juan.csrf@example.com',
+            'username' => 'juancsrftest',
             'password' => 'B@liT0urs#2026!P@ss',
         ]);
 
@@ -37,7 +37,7 @@ class CsrfProtectionTest extends \Tests\TestCase
     public function test_csrf_middleware_is_active_on_web_routes(): void
     {
         $response = $this->post('/login', [
-            'login' => 'juan.csrf@example.com',
+            'login' => 'juancsrftest',
             'password' => 'B@liT0urs#2026!P@ss',
         ]);
 

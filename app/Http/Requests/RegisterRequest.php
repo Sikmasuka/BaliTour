@@ -31,6 +31,7 @@ class RegisterRequest extends FormRequest
             'mobile_number' => ['required', 'string', 'max:20'],
             'barangay' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'username' => ['required', 'string', 'lowercase', 'alpha_dash', 'min:3', 'max:30', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }

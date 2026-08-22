@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->authenticateSessions();
+        // Apply secure HTTP headers (including clickjacking protection) to every response.
+        $middleware->prepend(\App\Http\Middleware\SecureHeaders::class);
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);

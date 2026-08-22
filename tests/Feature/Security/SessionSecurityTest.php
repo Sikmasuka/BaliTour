@@ -6,11 +6,18 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class SessionSecurityTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        RateLimiter::clear('juantest');
+    }
 
     /**
      * Test AuthenticateSession middleware invalidates stolen/other device sessions when password changes.
@@ -43,7 +50,7 @@ class SessionSecurityTest extends TestCase
     public function test_session_id_is_regenerated_on_login_to_prevent_session_fixation(): void
     {
         $user = User::factory()->create([
-            'email' => 'juan.fixation@example.com',
+            'username' => 'juantest',
             'password' => Hash::make('B@liT0urs#2026!P@ss'),
         ]);
 
@@ -51,7 +58,7 @@ class SessionSecurityTest extends TestCase
         $oldSessionId = session()->getId();
 
         $response = $this->post('/login', [
-            'login' => 'juan.fixation@example.com',
+            'username' => 'juantest',
             'password' => 'B@liT0urs#2026!P@ss',
         ]);
 

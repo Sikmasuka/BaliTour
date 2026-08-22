@@ -17,7 +17,7 @@ class SqlInjectionDefenseTest extends TestCase
     public function test_login_safely_parameterizes_sql_injection_payloads(): void
     {
         $user = User::factory()->create([
-            'email' => 'legit.user@example.com',
+            'username' => 'juandelacruz',
             'password' => Hash::make('B@liT0urs#2026!P@ss'),
         ]);
 
@@ -32,17 +32,17 @@ class SqlInjectionDefenseTest extends TestCase
 
         foreach ($sqlPayloads as $payload) {
             $response = $this->post('/login', [
-                'login' => $payload,
+                'username' => $payload,
                 'password' => 'B@liT0urs#2026!P@ss',
             ]);
 
             $this->assertGuest();
-            $response->assertSessionHasErrors('login');
+            $response->assertSessionHasErrors('username');
         }
 
         // Verify users table remains intact and unmodified
         $this->assertDatabaseHas('users', [
-            'email' => 'legit.user@example.com',
+            'username' => 'juandelacruz',
         ]);
     }
 
@@ -55,10 +55,11 @@ class SqlInjectionDefenseTest extends TestCase
             'first_name' => "Robert'; DROP TABLE users; --",
             'last_name' => 'O\'Connor',
             'mobile_number' => '09179998888',
+            'username' => 'sqli_test',
             'barangay' => "Poblacion' OR '1'='1",
             'email' => 'sqli.test@example.com',
-            'password' => 'B@liT0urs#2026!P@ss',
-            'password_confirmation' => 'B@liT0urs#2026!P@ss',
+            'password' => 'B@liT0urs#2026!',
+            'password_confirmation' => 'B@liT0urs#2026!',
         ]);
 
         $response->assertRedirect('/user/dashboard');
@@ -70,7 +71,8 @@ class SqlInjectionDefenseTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'sqli.test@example.com',
+            'username' => 'sqli_test',
+            'email'    => 'sqli.test@example.com',
         ]);
     }
 }

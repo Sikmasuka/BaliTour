@@ -17,6 +17,7 @@ class BreachedPasswordTest extends TestCase
         $response = $this->post('/register', [
             'first_name' => 'Juan',
             'last_name' => 'Dela Cruz',
+            'username' => 'juantest',
             'mobile_number' => '09170000000',
             'barangay' => 'Poblacion',
             'email' => 'juan.test@example.com',
@@ -36,6 +37,7 @@ class BreachedPasswordTest extends TestCase
         $response = $this->post('/register', [
             'first_name' => 'Juan',
             'last_name' => 'Dela Cruz',
+            'username' => 'juansecure',
             'mobile_number' => '09170000000',
             'barangay' => 'Poblacion',
             'email' => 'juan.secure@example.com',

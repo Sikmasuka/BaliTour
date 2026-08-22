@@ -118,6 +118,20 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // ─────────────────────────────────────────────────────────────────
+        // Security audit channel — dedicated log for all security events.
+        // Writes to storage/logs/security.log with daily rotation (90 days).
+        // Used by AuthController, AdminDestinationController, and any
+        // future controller that needs a tamper-visible security audit trail.
+        // ─────────────────────────────────────────────────────────────────
+        'security' => [
+            'driver'              => 'daily',
+            'path'                => storage_path('logs/security.log'),
+            'level'               => 'debug',
+            'days'                => 90,
+            'replace_placeholders' => true,
+        ],
+
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,

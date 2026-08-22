@@ -20,9 +20,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'username',
         'email',
         'password',
-        'role',
         'status',
         'last_login_at',
     ];
@@ -57,5 +57,20 @@ class User extends Authenticatable
     public function touristProfile(): HasOne
     {
         return $this->hasOne(TouristProfile::class);
+    }
+
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DestinationReview::class, 'user_id');
+    }
+
+    public function visitPlans(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(VisitPlan::class, 'user_id');
+    }
+
+    public function destinations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TouristDestination::class, 'created_by');
     }
 }
