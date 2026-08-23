@@ -146,7 +146,11 @@ class BackupService
                 $processResult = Process::run($command);
 
                 if ($processResult->successful() && ! empty($processResult->output())) {
-                    return $processResult->output();
+                    $header = "-- BaliTour Database Backup\n";
+                    $header .= "-- Database: `{$database}`\n";
+                    $header .= '-- Generated: '.Carbon::now()->toDateTimeString()."\n\n";
+
+                    return $header.$processResult->output();
                 }
 
                 Log::warning('mysqldump CLI returned error or empty output. Falling back to native PDO dumper: '.$processResult->errorOutput());
