@@ -17,37 +17,7 @@
         rel="stylesheet"
     >
 
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        forest: {
-                            950: '#03140E',
-                            900: '#061C14',
-                            800: '#09271C',
-                            700: '#0D3827',
-                        },
-
-                        emerald: {
-                            300: '#6EE7B7',
-                            400: '#34D399',
-                            500: '#10B981',
-                            600: '#059669',
-                            700: '#047857',
-                        }
-                    },
-
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         /* =========================================================

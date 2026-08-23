@@ -8,29 +8,35 @@
 
 ---
 
-## 🛠️ Complete Technical Stack
+## 🛠️ Complete Technical Stack & Exact Versions
 
-| Layer                    | Technology          | Details                                                                 |
-| :----------------------- | :------------------ | :---------------------------------------------------------------------- |
-| **Backend Framework**    | Laravel 13.x        | PHP 8.3+ engine using MVC architecture pattern                          |
-| **Database Engine**      | MySQL / MariaDB     | Managed via Laragon local development server                            |
-| **ORM / Data Access**    | Eloquent ORM        | Strict eager-loading policy (`with()`) to prevent N+1 query overhead    |
-| **Frontend Templating**  | Blade Components    | Dynamic Blade components (`<x-...>`) and modular views                  |
-| **CSS Framework**        | Tailwind CSS v4.x   | Configured via `@tailwindcss/vite` plugin                               |
-| **Asset Bundler**        | Vite 8.x            | High-speed ESM bundler integrated with Laravel                          |
-| **Client-Side Scripts**  | Vanilla JS (ES6+)   | Interactive DOM scripting, dynamic filters, and modal handling          |
-| **Maps Integration**     | Google Maps JS API  | Interactive map pin positioning, custom markers, location filtering     |
-| **Environment / Server** | Laragon             | Windows Apache/Nginx + MySQL + PHP 8.3 stack                            |
-| **Process Runner**       | Concurrently        | Orchestrates `artisan serve`, `queue:listen`, and `vite` simultaneously |
-| **Testing & Quality**    | PHPUnit 12.x / Pint | Unit/Feature testing & code style linting                               |
+| Layer                     | Technology               | Exact Version / Spec     | Details & Configuration                                             |
+| :------------------------ | :----------------------- | :----------------------- | :------------------------------------------------------------------ |
+| **Runtime / Language**    | PHP                      | `8.3.16` (`^8.3`)        | PHP 8.3 CLI & FPM engine                                            |
+| **Backend Framework**     | Laravel                  | `^13.8` (Laravel 13.x)   | MVC architecture pattern, strict typing, route model binding        |
+| **Database Engine**       | MySQL / MariaDB / SQLite | MySQL 8.x / MariaDB 10.x | Managed via Laragon (Local) & SQLite fallback for testing           |
+| **ORM / Data Access**     | Eloquent ORM             | Laravel 13.x Core        | Strict eager-loading policy (`with()`) to eliminate N+1 queries     |
+| **Frontend Templating**   | Blade Components         | Blade Engine             | Dynamic component architecture (`<x-...>`) and modular views        |
+| **CSS Framework**         | Tailwind CSS             | `v4.1.0` (`^4.1.0`)      | Modern CSS-first config via `@tailwindcss/vite` plugin              |
+| **Asset Bundler**         | Vite                     | `v8.0.0` (`^8.0.0`)      | High-speed ESM bundler integrated with `laravel-vite-plugin ^3.1`   |
+| **Client-Side Scripts**   | Vanilla JavaScript       | ECMAScript 2023+ (ES6+)  | Modular interactive DOM scripting, dynamic filters, modal handlers  |
+| **Maps Integration**      | Google Maps JS API       | v3 / Latest              | Interactive map pins, custom markers, bounds clustering & filtering |
+| **Environment / Server**  | Laragon Server           | 6.x+                     | Windows Apache/Nginx + MySQL + PHP 8.3 local stack                  |
+| **Process Orchestration** | Concurrently             | `^9.0.1`                 | Concurrently runs `artisan serve`, `queue:listen`, and `vite`       |
+| **Testing Framework**     | PHPUnit                  | `^12.5.12`               | Feature, Unit, and Security test suites                             |
+| **Code Style Linter**     | Laravel Pint             | `^1.27`                  | Strict opinionated PHP code formatting                              |
+| **CLI REPL**              | Laravel Tinker           | `^3.0`                   | Interactive Eloquent & PHP runtime environment                      |
 
-### Dev Dependencies
+### Development & Supporting Packages
 
-- `laravel/pail` – Real-time log tailing
-- `laravel/pao` – Laravel process orchestration helper
-- `fakerphp/faker` – Fake data generation for seeders/factories
-- `mockery/mockery` – Test mocking
-- `nunomaduro/collision` – Error reporting in CLI
+| Package                | Version  | Purpose                                        |
+| :--------------------- | :------- | :--------------------------------------------- |
+| `laravel/pail`         | `^1.2.5` | Real-time CLI log tailing                      |
+| `laravel/pao`          | `^1.0.6` | Laravel process orchestration helper           |
+| `laravel-vite-plugin`  | `^3.1`   | Seamless Vite integration for Blade views      |
+| `fakerphp/faker`       | `^1.23`  | Fake data generation for seeders & factories   |
+| `mockery/mockery`      | `^1.6`   | Mocking framework for PHPUnit testing          |
+| `nunomaduro/collision` | `^8.6`   | Interactive CLI error handling and diagnostics |
 
 ---
 
@@ -305,7 +311,7 @@ balitours/
 | `SqlInjectionDefenseTest`         | Validates parameterised queries resist SQL injection       |
 | `UnpublishedDestinationGuardTest` | Ensures unpublished destinations are hidden from public    |
 | `SecurityEventLoggingTest`        | Confirms security events are logged correctly              |
-| `XssProtectionTest`               | Verifies HTML escaping on Blade outputs and user inputs     |
+| `XssProtectionTest`               | Verifies HTML escaping on Blade outputs and user inputs    |
 | `MediaUrlSecurityTest`            | Enforces strict URL & image extension validation (jpg/png) |
 
 ---

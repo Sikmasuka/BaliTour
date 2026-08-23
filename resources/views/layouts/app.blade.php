@@ -27,65 +27,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            forest: { 
-              950: '#0F241C', 
-              900: '#133327', 
-              800: '#1A4636', 
-              700: '#1E5E45', 
-              600: '#287557', 
-              500: '#38906D',
-              300: '#88B8A2',
-              100: '#E0ECE4', 
-              50: '#EEF4F0' 
-            },
-            mineral: { 
-              50: '#EDF1EE', 
-              100: '#E2E9E4', 
-              200: '#D2DBD4', 
-              300: '#BAC6BD', 
-              400: '#9BAA9F' 
-            },
-            cream: { 
-              50: '#EDF1EE', 
-              100: '#E2E9E4', 
-              200: '#D2DBD4', 
-              300: '#BAC6BD' 
-            },
-            sage: { 
-              400: '#88B8A2', 
-              300: '#B5D4C3' 
-            },
-            ink: { 
-              950: '#0A1913', 
-              900: '#0F241C', 
-              700: '#253D32', 
-              600: '#3D584B', 
-              500: '#536B60', 
-              400: '#738A80',
-              300: '#A2B5AC'
-            },
-            sand: {
-              600: '#A16207',
-              500: '#BA7522',
-              400: '#D97706',
-              100: '#FEF3C7',
-              50: '#FDF8EE'
-            }
-          },
-          fontFamily: {
-            serif: ['"Playfair Display"', 'serif'],
-            sans: ['Inter', 'sans-serif'],
-          },
-        }
-      }
-    }
-  </script>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
   

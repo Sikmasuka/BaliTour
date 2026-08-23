@@ -1,0 +1,115 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: balitour-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8000:8000"
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: balitour
+      DB_USERNAME: balitour
+      DB_PASSWORD: balitour
+
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+    networks:
+      - balitour
+
+  mysql:
+    image: mysql:8.4
+    container_name: balitour-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: balitour
+      MYSQL_USER: balitour
+      MYSQL_PASSWORD: balitour
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - balitour_mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-proot"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - balitour
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: balitour-queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php artisan queue:listen --tries=1 --timeout=0
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+      app:
+        condition: service_started
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: balitour
+      DB_USERNAME: balitour
+      DB_PASSWORD: balitour
+
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+    networks:
+      - balitour
+
+  vite:
+    image: node:24
+    container_name: balitour-vite
+    working_dir: /var/www/html
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ./:/var/www/html
+      - balitour_node_modules:/var/www/html/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - balitour
+
+volumes:
+  balitour_mysql_data:
+  balitour_node_modules:
+
+networks:
+  balitour:
+    driver: bridge

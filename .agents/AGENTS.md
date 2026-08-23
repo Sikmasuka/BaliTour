@@ -9,29 +9,31 @@
 
 ---
 
-## Technical Stack (Tech Stack Specifications)
+## Technical Stack (Tech Stack Specifications & Versions)
 
-### Backend Engine
+### Backend Engine & Runtime
 
-- **Language:** PHP 8.3+
-- **Framework:** Laravel 13.x
-- **Architecture Pattern:** MVC (Model-View-Controller) with Thin Controllers & Service/Action isolation.
+- **Language / Runtime:** PHP `8.3.16` (`^8.3`)
+- **Framework:** Laravel `^13.8` (Laravel 13.x)
+- **Architecture Pattern:** MVC (Model-View-Controller) with Thin Controllers & Service/Action isolation (`DestinationService`).
 - **ORM / Database Access:** Eloquent ORM with mandatory eager loading (`with()`) to eliminate N+1 queries.
-- **Database Engine:** MySQL / MariaDB (managed via Laragon local server).
+- **Database Engine:** MySQL 8.x / MariaDB 10.x (managed via Laragon local server) / SQLite for fast automated testing.
+- **CLI REPL & Tools:** Laravel Tinker `^3.0`, Laravel Pail `^1.2.5`, Laravel Pao `^1.0.6`.
 
 ### Frontend & UI Layer
 
 - **Templating Engine:** Blade Component Architecture (`<x-...>`) & Modular Blade Views.
-- **Styling Framework:** Tailwind CSS 4.x (via `@tailwindcss/vite`).
-- **Asset Bundler / Tooling:** Vite 8.x + `laravel-vite-plugin`.
-- **Client-Side Logic:** Vanilla JavaScript (ES6+) for interactive map scripts & DOM actions.
+- **Styling Framework:** Tailwind CSS `v4.1.0` (`^4.1.0` via `@tailwindcss/vite`).
+- **Asset Bundler / Tooling:** Vite `v8.0.0` (`^8.0.0`) + `laravel-vite-plugin` `^3.1`.
+- **Client-Side Logic:** Vanilla JavaScript (ES6+ / ES2023) for interactive map scripts & DOM actions.
 - **Interactive Maps:** Google Maps JavaScript API (marker clustering, custom pins, location filters).
 
 ### Environment & Development Tools
 
-- **Local Server Stack:** Laragon (Apache/Nginx + MySQL + PHP 8.3).
-- **Process Orchestration:** `npx concurrently` (running `php artisan serve`, `queue:listen`, and `vite` simultaneously).
-- **Testing & Quality Assurance:** PHPUnit 12.x & Laravel Pint (code style linter).
+- **Local Server Stack:** Laragon 6.x+ (Apache/Nginx + MySQL + PHP 8.3).
+- **Process Orchestration:** Concurrently `^9.0.1` (`npx concurrently` running `php artisan serve`, `queue:listen`, and `vite` simultaneously).
+- **Testing & Quality Assurance:** PHPUnit `^12.5.12` & Laravel Pint `^1.27` (code style linter).
+- **Testing Mocks & Helpers:** `mockery/mockery` `^1.6`, `fakerphp/faker` `^1.23`, `nunomaduro/collision` `^8.6`.
 
 ---
 

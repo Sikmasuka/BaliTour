@@ -12,53 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            forest: {
-              DEFAULT: '#0B291E',
-              700: '#144A36',
-              800: '#0F3B2B',
-              900: '#0B291E',
-              950: '#061A13',
-            },
-            emerald: {
-              50: '#E8F5E9',
-              100: '#C8E6C9',
-              600: '#1E7E52',
-              700: '#156742',
-              800: '#0E4E31',
-            },
-            sand: {
-              DEFAULT: '#D97706',
-              400: '#FBBF24',
-              500: '#F59E0B',
-              600: '#D97706',
-            },
-            offwhite: {
-              DEFAULT: '#F3F4EE',
-              50: '#F8F9F4',
-              100: '#F3F4EE',
-              200: '#E7EAE0',
-              300: '#D9DED0',
-            },
-            ink: {
-              DEFAULT: '#0F172A',
-              soft: '#334155',
-              muted: '#64748B',
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['"Playfair Display"', 'Georgia', 'serif'],
-          }
-        }
-      }
-    }
-  </script>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   
   <style>

@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(SecureHeaders::class);
         $middleware->alias([
             'role' => RoleMiddleware::class,
+            'auto_backup' => \App\Http\Middleware\CheckAutoDatabaseBackup::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

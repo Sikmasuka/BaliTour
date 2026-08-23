@@ -147,7 +147,7 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('/notifications', fn () => view('tourist.notifications.index'));
 });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin', 'auto_backup'])->group(function () {
     Route::get('/dashboard', fn () => view('admin.dashboard.index'));
     Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations');
     Route::post('/destinations', [AdminDestinationController::class, 'store'])->name('destinations.store');
