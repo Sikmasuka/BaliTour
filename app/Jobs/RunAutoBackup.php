@@ -53,7 +53,7 @@ class RunAutoBackup implements ShouldQueue
 
             Log::info("AutoBackup job completed successfully. File: {$result['filename']} ({$result['size_formatted']}).");
         } catch (Exception $e) {
-            Log::error("AutoBackup job failed: " . $e->getMessage(), [
+            Log::error('AutoBackup job failed: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
 

@@ -8,7 +8,6 @@ use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckAutoDatabaseBackup
@@ -31,7 +30,7 @@ class CheckAutoDatabaseBackup
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -46,7 +45,7 @@ class CheckAutoDatabaseBackup
     protected function checkAndTriggerAutoBackup(): void
     {
         // Avoid background job execution during unrelated test suites unless explicitly enabled
-        if (app()->runningUnitTests() && !app()->bound('test.auto_backup_enabled')) {
+        if (app()->runningUnitTests() && ! app()->bound('test.auto_backup_enabled')) {
             return;
         }
 

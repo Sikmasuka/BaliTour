@@ -44,7 +44,7 @@ class BackupDatabase extends Command
             Cache::forever('auto_backup:last_run_at', now()->toDateTimeString());
 
             $this->newLine();
-            $this->info("✔ Backup completed successfully!");
+            $this->info('✔ Backup completed successfully!');
             $this->table(
                 ['Attribute', 'Details'],
                 [
@@ -60,10 +60,10 @@ class BackupDatabase extends Command
 
             // Display current backup list
             $existingBackups = $backupService->getBackups();
-            if (!empty($existingBackups)) {
+            if (! empty($existingBackups)) {
                 $this->newLine();
-                $this->info("Current Retained Backups (" . count($existingBackups) . "/{$limit}):");
-                
+                $this->info('Current Retained Backups ('.count($existingBackups)."/{$limit}):");
+
                 $rows = array_map(function ($backup, $index) {
                     return [
                         $index + 1,
@@ -78,7 +78,8 @@ class BackupDatabase extends Command
 
             return Command::SUCCESS;
         } catch (Exception $e) {
-            $this->error("✘ Backup failed: " . $e->getMessage());
+            $this->error('✘ Backup failed: '.$e->getMessage());
+
             return Command::FAILURE;
         }
     }

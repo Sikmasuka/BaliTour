@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Console\Commands\BackupDatabase;
 use App\Http\Middleware\CheckAutoDatabaseBackup;
 use App\Jobs\RunAutoBackup;
 use App\Services\BackupService;
@@ -34,12 +33,12 @@ class BackupDatabaseTest extends TestCase
 
         $this->assertTrue($result['success']);
         $this->assertStringEndsWith('.sql.gz', $result['filename']);
-        $this->assertEquals('backups/db/' . $result['filename'], $result['relative_path']);
-        
+        $this->assertEquals('backups/db/'.$result['filename'], $result['relative_path']);
+
         Storage::disk('local')->assertExists($result['relative_path']);
         $content = Storage::disk('local')->get($result['relative_path']);
         $this->assertNotEmpty($content);
-        
+
         // Decompress and verify SQL content
         $decompressed = gzdecode($content);
         $this->assertNotFalse($decompressed);
@@ -55,7 +54,7 @@ class BackupDatabaseTest extends TestCase
             $time = Carbon::now()->subMinutes(60 - ($i * 5))->timestamp;
             $filename = "backup_test_2026-08-23_00000{$i}.sql.gz";
             $path = "backups/db/{$filename}";
-            
+
             Storage::disk('local')->put($path, gzencode("-- dump {$i}", 9));
             touch(Storage::disk('local')->path($path), $time);
         }
@@ -101,7 +100,7 @@ class BackupDatabaseTest extends TestCase
         Queue::fake();
 
         // No previous backup in cache -> backup is due
-        $middleware = new CheckAutoDatabaseBackup();
+        $middleware = new CheckAutoDatabaseBackup;
         $request = Request::create('/admin/dashboard', 'GET');
 
         $response = $middleware->handle($request, function ($req) {
@@ -121,7 +120,7 @@ class BackupDatabaseTest extends TestCase
         // Set last backup to 2 hours ago (within 24 hours)
         Cache::put('auto_backup:last_run_at', Carbon::now()->subHours(2)->toDateTimeString());
 
-        $middleware = new CheckAutoDatabaseBackup();
+        $middleware = new CheckAutoDatabaseBackup;
         $request = Request::create('/admin/dashboard', 'GET');
 
         $middleware->handle($request, function ($req) {

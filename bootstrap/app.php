@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckAutoDatabaseBackup;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\SecureHeaders;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(SecureHeaders::class);
         $middleware->alias([
             'role' => RoleMiddleware::class,
-            'auto_backup' => \App\Http\Middleware\CheckAutoDatabaseBackup::class,
+            'auto_backup' => CheckAutoDatabaseBackup::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

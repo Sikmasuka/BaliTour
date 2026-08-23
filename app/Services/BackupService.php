@@ -41,8 +41,9 @@ class BackupService
     /**
      * Run the full backup workflow: dump, compress, store, and prune old files.
      *
-     * @param int|null $maxBackups Maximum number of backup files to keep (default: 5)
+     * @param  int|null  $maxBackups  Maximum number of backup files to keep (default: 5)
      * @return array Metadata about the completed backup
+     *
      * @throws Exception
      */
     public function runBackup(?int $maxBackups = null): array
@@ -51,7 +52,7 @@ class BackupService
         $connection = config('database.default', 'mysql');
         $timestamp = Carbon::now()->format('Y-m-d_His');
         $databaseName = config("database.connections.{$connection}.database", 'database');
-        
+
         // Clean database name for safe filename
         $safeDbName = preg_replace('/[^a-zA-Z0-9_-]/', '_', (string) $databaseName);
         $filename = "backup_{$safeDbName}_{$timestamp}.sql.gz";
@@ -65,7 +66,7 @@ class BackupService
         // 2. Compress using GZIP
         $compressedContent = gzencode($sqlContent, 9);
         if ($compressedContent === false) {
-            throw new Exception("Failed to compress database dump using gzip.");
+            throw new Exception('Failed to compress database dump using gzip.');
         }
 
         // 3. Ensure directory exists and store file
@@ -123,34 +124,34 @@ class BackupService
         $password = $config['password'] ?? '';
 
         // Attempt CLI mysqldump first if CLI binary is available
-        if ($this->isCommandAvailable('mysqldump') && !empty($database)) {
+        if ($this->isCommandAvailable('mysqldump') && ! empty($database)) {
             try {
                 $command = [
                     'mysqldump',
-                    '--host=' . $host,
-                    '--port=' . $port,
-                    '--user=' . $username,
+                    '--host='.$host,
+                    '--port='.$port,
+                    '--user='.$username,
                     '--add-drop-table',
                     '--single-transaction',
                     '--quick',
                     '--skip-comments',
                 ];
 
-                if (!empty($password)) {
-                    $command[] = '--password=' . $password;
+                if (! empty($password)) {
+                    $command[] = '--password='.$password;
                 }
 
                 $command[] = $database;
 
                 $processResult = Process::run($command);
 
-                if ($processResult->successful() && !empty($processResult->output())) {
+                if ($processResult->successful() && ! empty($processResult->output())) {
                     return $processResult->output();
                 }
 
-                Log::warning("mysqldump CLI returned error or empty output. Falling back to native PDO dumper: " . $processResult->errorOutput());
+                Log::warning('mysqldump CLI returned error or empty output. Falling back to native PDO dumper: '.$processResult->errorOutput());
             } catch (Exception $e) {
-                Log::warning("mysqldump process execution failed. Falling back to PDO dumper: " . $e->getMessage());
+                Log::warning('mysqldump process execution failed. Falling back to PDO dumper: '.$e->getMessage());
             }
         }
 
@@ -187,10 +188,10 @@ class BackupService
         $conn = DB::connection($connection);
         $pdo = $conn->getPdo();
         $dbName = config("database.connections.{$connection}.database", 'database');
-        
+
         $sql = "-- BaliTour Database Backup\n";
         $sql .= "-- Database: `{$dbName}`\n";
-        $sql .= "-- Generated: " . Carbon::now()->toDateTimeString() . "\n";
+        $sql .= '-- Generated: '.Carbon::now()->toDateTimeString()."\n";
         $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
         $sql .= "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';\n";
         $sql .= "START TRANSACTION;\n\n";
@@ -207,15 +208,15 @@ class BackupService
 
             try {
                 $createTableStmt = $pdo->query("SHOW CREATE TABLE `{$table}`")->fetch(PDO::FETCH_NUM);
-                if (!empty($createTableStmt[1])) {
-                    $sql .= $createTableStmt[1] . ";\n\n";
+                if (! empty($createTableStmt[1])) {
+                    $sql .= $createTableStmt[1].";\n\n";
                 }
             } catch (Exception) {
                 // If SHOW CREATE TABLE is unsupported (e.g. SQLite), generate standard DDL if possible
                 try {
                     $sqliteMaster = $pdo->query("SELECT sql FROM sqlite_master WHERE type='table' AND name='{$table}'")->fetch(PDO::FETCH_ASSOC);
-                    if (!empty($sqliteMaster['sql'])) {
-                        $sql .= $sqliteMaster['sql'] . ";\n\n";
+                    if (! empty($sqliteMaster['sql'])) {
+                        $sql .= $sqliteMaster['sql'].";\n\n";
                     }
                 } catch (Exception) {
                     // Ignore non-standard fallback
@@ -226,7 +227,7 @@ class BackupService
             $rows = $conn->table($table)->get();
             if ($rows->isNotEmpty()) {
                 $sql .= "-- Dumping data for table `{$table}`\n";
-                
+
                 $columns = array_keys((array) $rows->first());
                 $columnList = implode('`, `', $columns);
 
@@ -243,10 +244,10 @@ class BackupService
                                 $rowValues[] = $pdo->quote((string) $val);
                             }
                         }
-                        $valuesSql[] = '(' . implode(', ', $rowValues) . ')';
+                        $valuesSql[] = '('.implode(', ', $rowValues).')';
                     }
 
-                    $sql .= "INSERT INTO `{$table}` (`{$columnList}`) VALUES\n" . implode(",\n", $valuesSql) . ";\n";
+                    $sql .= "INSERT INTO `{$table}` (`{$columnList}`) VALUES\n".implode(",\n", $valuesSql).";\n";
                 }
                 $sql .= "\n";
             }
@@ -261,7 +262,7 @@ class BackupService
     /**
      * Clean old backups and keep only the latest `$limit` files.
      *
-     * @param int $limit Maximum number of backup files to keep (default: 5)
+     * @param  int  $limit  Maximum number of backup files to keep (default: 5)
      * @return array Deleted file names
      */
     public function cleanOldBackups(int $limit = 5): array
@@ -292,7 +293,7 @@ class BackupService
      */
     public function getBackups(): array
     {
-        if (!Storage::disk($this->disk)->exists($this->directory)) {
+        if (! Storage::disk($this->disk)->exists($this->directory)) {
             return [];
         }
 
@@ -330,6 +331,7 @@ class BackupService
         try {
             $testCmd = PHP_OS_FAMILY === 'Windows' ? "where {$command}" : "which {$command}";
             $result = Process::run($testCmd);
+
             return $result->successful();
         } catch (Exception) {
             return false;
@@ -347,6 +349,6 @@ class BackupService
         $pow = min($pow, count($units) - 1);
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, $precision) . ' ' . $units[$pow];
+        return round($bytes, $precision).' '.$units[$pow];
     }
 }
