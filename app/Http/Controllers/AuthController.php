@@ -23,15 +23,16 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        // Per-User Progressive Rate Limiter (Targeted Account Brute-Force & Credential Stuffing Defense)
-        // Keyed strictly per user/login identity so brute-force attempts across rotating IPs are effectively blocked.
-        // Tier 1: 5 failed attempts -> 3 minutes (180s) lockout.
+        // 1. SETUP THROTTLE KEY & PROGRESSIVE LOCKOUT TIERS
+        // Keyed strictly per user identity to defend against rotating proxy / botnet attacks.
+        // Tier 1: 5 failed attempts  -> 3 minutes (180s) lockout.
         // Tier 2: 10 failed attempts -> 10 minutes (600s) extended lockout.
         $throttleKey = $this->throttleKey($credentials['username']);
         $currentAttempts = RateLimiter::attempts($throttleKey);
         $maxAttempts = $currentAttempts >= 10 ? 10 : 5;
         $decaySeconds = $currentAttempts >= 10 ? 600 : 180;
 
+        // 2. CHECK IF TARGET ACCOUNT IS CURRENTLY LOCKED OUT
         if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($throttleKey);
 
@@ -58,6 +59,7 @@ class AuthController extends Controller
                 ->onlyInput('username');
         }
 
+        // 3. ATTEMPT AUTHENTICATION & RESET RATE LIMIT COUNTER ON SUCCESS
         if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']], $request->boolean('remember'))) {
             RateLimiter::clear($throttleKey);
 
@@ -110,6 +112,7 @@ class AuthController extends Controller
             ]);
         }
 
+        // 4. RECORD FAILED ATTEMPT & INCREMENT COUNTER
         RateLimiter::hit($throttleKey, $decaySeconds);
 
         $attemptsAfter = RateLimiter::attempts($throttleKey);
@@ -120,6 +123,7 @@ class AuthController extends Controller
             'attempts' => $attemptsAfter,
         ]);
 
+        // 5. CHECK IF ATTEMPTS JUST REACHED THE LOCKOUT THRESHOLD
         if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($throttleKey);
 
@@ -147,17 +151,29 @@ class AuthController extends Controller
                 ->onlyInput('username');
         }
 
+        // 6. CALCULATE REMAINING ATTEMPTS & PROGRESSIVE WARNING (SMART UX)
+        $remaining = max(0, $maxAttempts - $attemptsAfter);
+        $isWarning = $remaining <= 2 && $remaining > 0;
+        $attemptWord = $remaining === 1 ? 'attempt' : 'attempts';
+        $message = $isWarning
+            ? "These credentials do not match our records. {$remaining} {$attemptWord} remaining before temporary lockout."
+            : 'These credentials do not match our records.';
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Credentials incorrect.',
+                'message' => $message,
+                'remaining_attempts' => $remaining,
+                'is_warning' => $isWarning,
             ], 422);
         }
 
         return back()->withErrors([
-            'login_error' => 'Credentials incorrect.',
-            'username' => 'Credentials incorrect.',
-        ])->onlyInput('username');
+            'login_error' => $message,
+            'username' => $message,
+        ])->with('remaining_attempts', $remaining)
+            ->with('is_warning', $isWarning)
+            ->onlyInput('username');
     }
 
     /**
@@ -199,6 +215,7 @@ class AuthController extends Controller
         });
 
         Auth::login($user);
+        RateLimiter::clear($request->throttleKey());
         $request->session()->regenerate();
 
         Log::channel('security')->info('AUTH_REGISTER_SUCCESS', [

@@ -5,58 +5,33 @@
 @section('booking-history-active', 'bg-cream-50 text-forest-900 shadow-sm')
 
 @section('content')
-  <section class="mb-8 rounded-3xl bg-forest-900 p-8 text-cream-50 sm:p-10">
-    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-sage-300">History</p>
-    <h1 class="mt-3 font-serif text-3xl font-medium sm:text-4xl">Travel List</h1>
-    <p class="mt-3 max-w-2xl text-sm leading-relaxed text-cream-100/80">Review your completed and upcoming travel list items in one place.</p>
-  </section>
+    <section class="mb-8 rounded-3xl bg-forest-900 p-8 text-cream-50 sm:p-10">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-sage-300">History</p>
+        <h1 class="mt-3 font-serif text-3xl font-medium sm:text-4xl">Travel List</h1>
+        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-cream-100/80">Review your completed and upcoming travel list
+            items in one place.</p>
+    </section>
 
-  <section class="space-y-4">
-    <article class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cream-200">
-      <div class="relative h-52 overflow-hidden bg-slate-100">
-        <img class="h-full w-full object-cover transition duration-500 hover:scale-105" src="https://images.unsplash.com/photo-1543167249-ebb1b0a5dded?auto=format&fit=crop&w=1200&q=80" alt="Nyepi Festival celebration">
-      </div>
-      <div class="p-6">
-        <div class="flex items-center justify-between gap-4">
-          <div>
-            <h2 class="font-serif text-xl font-medium text-forest-900">Nyepi Festival</h2>
-            <p class="mt-2 text-sm text-ink-600">March 11, 2027 · Confirmed</p>
-          </div>
-          <span class="rounded-full bg-sage-100 px-3 py-1 text-xs font-semibold uppercase text-forest-900">Completed</span>
+    <section class="space-y-4">
+        <div
+            class="flex flex-col items-center justify-center rounded-3xl border border-dashed border-cream-200 bg-white py-16 text-center shadow-xs">
+            <div
+                class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-cream-100 text-forest-900 ring-1 ring-cream-200">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                </svg>
+            </div>
+            <p class="mt-4 font-serif text-xl font-medium text-forest-900">Your travel list is empty</p>
+            <p class="mt-1 max-w-sm text-sm text-ink-600">You haven't scheduled any destinations or upcoming trips yet.</p>
+            <a href="{{ route('destinations.index') }}"
+                class="mt-6 inline-flex items-center gap-2 rounded-2xl bg-forest-900 px-5 py-2.5 text-sm font-semibold text-cream-50 hover:bg-forest-800 transition shadow-xs">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                Explore Destinations
+            </a>
         </div>
-        <p class="mt-4 text-sm text-ink-600">A cultural festival experience with local guides and a comfortable stay.</p>
-      </div>
-    </article>
-    <article class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cream-200" data-index="0">
-      <div class="relative h-52 overflow-hidden bg-slate-100">
-        <img class="h-full w-full object-cover transition duration-500 hover:scale-105" src="https://images.unsplash.com/photo-1514516870925-4f2dcf632f46?auto=format&fit=crop&w=1200&q=80" alt="Mango Festival celebration">
-      </div>
-      <div class="p-6">
-        <div class="flex items-center justify-between gap-4">
-          <div>
-            <h2 class="font-serif text-xl font-medium text-forest-900">Mango Festival</h2>
-            <p class="mt-2 text-sm text-ink-600">July 22, 2027 · Upcoming</p>
-          </div>
-          <span class="rounded-full bg-cream-100 px-3 py-1 text-xs font-semibold uppercase text-ink-600">Upcoming</span>
-        </div>
-        <p class="mt-4 text-sm text-ink-600">A planned visit to local markets and heritage sites with guided tours.</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <button type="button" data-index="0" class="cancel-booking inline-flex items-center justify-center rounded-full border border-ink-200 bg-cream-100 px-5 py-3 text-sm font-semibold text-ink-700 transition hover:bg-cream-200">Remove from travel list</button>
-        </div>
-      </div>
-    </article>
-  </section>
-
-@push('scripts')
-<script>
-  document.querySelectorAll('.cancel-booking').forEach((button) => {
-    button.addEventListener('click', () => {
-      const card = button.closest('article');
-      if (!card) return;
-      card.classList.add('transition', 'duration-300', 'opacity-0', 'scale-95');
-      setTimeout(() => card.remove(), 250);
-    });
-  });
-</script>
-@endpush
+    </section>
 @endsection

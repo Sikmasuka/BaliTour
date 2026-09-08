@@ -21,7 +21,7 @@ export function initLogoutModal() {
 
     if (!currentModal || !currentCard) {
       // Fallback: submit standard form if modal not in DOM
-      const fallbackForm = document.querySelector('.sidebar-logout-form') || document.getElementById('logout-form');
+      const fallbackForm = document.getElementById('logoutModalForm') || document.getElementById('logout-form');
       if (fallbackForm) fallbackForm.submit();
       return;
     }

@@ -22,10 +22,10 @@ Route::get('/destinations/{slug}', [DestinationController::class, 'show'])->name
 Route::post('/destinations/{slug}/reviews', [DestinationController::class, 'storeReview'])->name('destinations.reviews.store')->middleware('auth');
 Route::post('/destinations/{slug}/visit-plans', [DestinationController::class, 'storeVisitPlan'])->name('destinations.visit-plans.store')->middleware('auth');
 
-Route::get('/prototype/destination', fn () => view('prototype.destination-detail'))->name('prototype.destination');
+Route::get('/prototype/destination', fn() => view('prototype.destination-detail'))->name('prototype.destination');
 
 Route::prefix('public')->name('public.')->group(function () {
-    Route::get('/home', fn () => renderPage([
+    Route::get('/home', fn() => renderPage([
         'title' => 'Public Home',
         'eyebrow' => 'Public',
         'intro' => 'A welcoming public landing page that introduces travelers to the BaliTours experience.',
@@ -37,7 +37,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/about', fn () => renderPage([
+    Route::get('/about', fn() => renderPage([
         'title' => 'About Us',
         'eyebrow' => 'About',
         'intro' => 'Read about BaliTours, our mission, and how we support sustainable travel and local communities.',
@@ -48,7 +48,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/destinations', fn () => renderPage([
+    Route::get('/destinations', fn() => renderPage([
         'title' => 'Destinations',
         'eyebrow' => 'Destinations',
         'intro' => 'Explore curated destinations and travel experiences that fit every style.',
@@ -68,7 +68,7 @@ Route::prefix('public')->name('public.')->group(function () {
         return renderPage([
             'title' => 'Destination Details',
             'eyebrow' => 'Destination',
-            'intro' => 'Details for destination: '.ucwords(str_replace(['-', '_'], ' ', $slug)).'.',
+            'intro' => 'Details for destination: ' . ucwords(str_replace(['-', '_'], ' ', $slug)) . '.',
             'cards' => [
                 ['title' => 'Highlights', 'description' => 'Key attractions and experiences at this destination.'],
                 ['title' => 'How to Get There', 'description' => 'Travel tips, routes, and local transport options.'],
@@ -78,9 +78,9 @@ Route::prefix('public')->name('public.')->group(function () {
         ]);
     });
 
-    Route::get('/prototype/destination', fn () => view('prototype.destination-detail'))->name('prototype.destination');
+    Route::get('/prototype/destination', fn() => view('prototype.destination-detail'))->name('prototype.destination');
 
-    Route::get('/events', fn () => renderPage([
+    Route::get('/events', fn() => renderPage([
         'title' => 'Events',
         'eyebrow' => 'Events',
         'intro' => 'Find festivals and cultural events that make every visit special.',
@@ -91,7 +91,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/travel-guide', fn () => renderPage([
+    Route::get('/travel-guide', fn() => renderPage([
         'title' => 'Travel Guide',
         'eyebrow' => 'Travel Guide',
         'intro' => 'Helpful travel advice for planning your trip with confidence.',
@@ -102,7 +102,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/search', fn () => renderPage([
+    Route::get('/search', fn() => renderPage([
         'title' => 'Search',
         'eyebrow' => 'Search',
         'intro' => 'Search available destinations, events, and travel packages.',
@@ -113,7 +113,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/contact', fn () => renderPage([
+    Route::get('/contact', fn() => renderPage([
         'title' => 'Contact Us',
         'eyebrow' => 'Contact',
         'intro' => 'Get in touch with our travel advisors and support team.',
@@ -124,7 +124,7 @@ Route::prefix('public')->name('public.')->group(function () {
         ],
     ]));
 
-    Route::get('/faq', fn () => renderPage([
+    Route::get('/faq', fn() => renderPage([
         'title' => 'FAQ',
         'eyebrow' => 'FAQ',
         'intro' => 'Answers to common questions about trips, bookings, and travel preparations.',
@@ -137,43 +137,45 @@ Route::prefix('public')->name('public.')->group(function () {
 });
 
 Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
-    Route::get('/', fn () => redirect()->route('user.dashboard'));
-    Route::get('/dashboard', fn () => view('tourist.dashboard.index'));
+    Route::get('/', fn() => redirect()->route('user.dashboard'));
+    Route::get('/dashboard', fn() => view('tourist.dashboard.index'))->name('dashboard');
     Route::get('/explore-places', [DestinationController::class, 'index'])->name('explore-places');
-    Route::get('/edit-profile', fn () => view('tourist.edit-profile.index'));
-    Route::get('/bookmarks', fn () => view('tourist.bookmarks.index'));
-    Route::get('/booking-history', fn () => view('tourist.travel-list.index'));
-    Route::get('/reviews', fn () => view('tourist.reviews.index'));
-    Route::get('/notifications', fn () => view('tourist.notifications.index'));
+    Route::get('/edit-profile', fn() => view('tourist.edit-profile.index'))->name('edit-profile');
+    Route::get('/bookmarks', fn() => view('tourist.bookmarks.index'))->name('bookmarks');
+    Route::get('/booking-history', fn() => view('tourist.travel-list.index'))->name('booking-history');
+    Route::get('/reviews', fn() => view('tourist.reviews.index'))->name('reviews');
+    Route::get('/notifications', fn() => view('tourist.notifications.index'))->name('notifications');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin', 'auto_backup'])->group(function () {
-    Route::get('/dashboard', fn () => view('admin.dashboard.index'));
+    Route::get('/dashboard', fn() => view('admin.dashboard.index'))->name('dashboard');
     Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations');
     Route::post('/destinations', [AdminDestinationController::class, 'store'])->name('destinations.store');
     Route::put('/destinations/{id}', [AdminDestinationController::class, 'update'])->name('destinations.update');
     Route::delete('/destinations/{id}', [AdminDestinationController::class, 'destroy'])->name('destinations.destroy');
-    Route::get('/events', fn () => view('admin.events.index'));
-    Route::get('/reviews', fn () => view('admin.reviews.index'));
-    Route::get('/users', fn () => view('admin.users.index'));
-    Route::get('/bookings', fn () => view('admin.bookings.index'));
-    Route::get('/messages', fn () => view('admin.messages.index'));
-    Route::get('/balingasag-gallery', fn () => view('admin.balingasag-gallery.index'));
-    Route::get('/system-logs', fn () => view('admin.system-logs.index'));
-    Route::get('/security-logs', fn () => view('admin.security-logs.index'));
-    Route::get('/settings', fn () => view('admin.settings.index'));
+    Route::get('/events', fn() => view('admin.events.index'))->name('events');
+    Route::get('/reviews', fn() => view('admin.reviews.index'))->name('reviews');
+    Route::get('/users', fn() => view('admin.users.index', [
+        'users' => \App\Models\User::with('touristProfile')->latest()->paginate(15),
+    ]))->name('users');
+    Route::get('/bookings', fn() => view('admin.bookings.index'))->name('bookings');
+    Route::get('/messages', fn() => view('admin.messages.index'))->name('messages');
+    Route::get('/balingasag-gallery', fn() => view('admin.balingasag-gallery.index'))->name('balingasag-gallery');
+    Route::get('/system-logs', fn() => view('admin.system-logs.index'))->name('system-logs');
+    Route::get('/security-logs', fn() => view('admin.security-logs.index'))->name('security-logs');
+    Route::get('/settings', fn() => view('admin.settings.index'))->name('settings');
 });
 
 // Authentication — login/register UI is handled via modal on the homepage.
 // GET /login redirects to homepage so Laravel's auth middleware redirect still works.
-Route::get('/login', fn () => redirect('/'))->name('login');
-Route::get('/register', fn () => redirect('/'));
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:20,1');
-Route::post('/register', [AuthController::class, 'register'])->name('register')->middleware('throttle:8,1');
+Route::get('/login', fn() => redirect('/'))->name('login');
+Route::get('/register', fn() => redirect('/'));
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+Route::post('/register', [AuthController::class, 'register'])->name('register')->middleware('throttle:register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/users', fn () => redirect()->route('admin.users'))->middleware(['auth', 'role:admin']);
-Route::get('/admin', fn () => redirect()->route('admin.dashboard'))->middleware(['auth', 'role:admin']);
+Route::get('/users', fn() => redirect()->route('admin.users'))->middleware(['auth', 'role:admin']);
+Route::get('/admin', fn() => redirect()->route('admin.dashboard'))->middleware(['auth', 'role:admin']);
 
 // Error Page Testing Routes — gated behind admin auth (no public access).
 Route::get('/test-error/{code}', function ($code) {

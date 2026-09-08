@@ -15,22 +15,21 @@ class TouristDestinationSeeder extends Seeder
      */
     public function run(): void
     {
-        // Find or create admin user
+        // Retrieve or ensure existence of admin & tourist users
         $admin = User::firstOrCreate(
-            ['email' => 'admin@balitours.test'],
+            ['username' => 'admin'],
             [
-                'username' => 'admin',
+                'email' => 'admin@balitours.test',
                 'password' => bcrypt('password'),
                 'role' => 'admin',
                 'status' => 'active',
             ]
         );
 
-        // Find or create a test tourist
         $tourist = User::firstOrCreate(
-            ['email' => 'tourist@balitours.test'],
+            ['username' => 'mariasantos'],
             [
-                'username' => 'mariasantos',
+                'email' => 'tourist@balitours.test',
                 'password' => bcrypt('password'),
                 'role' => 'tourist',
                 'status' => 'active',
@@ -194,10 +193,13 @@ class TouristDestinationSeeder extends Seeder
 
             $destData['created_by'] = $admin->id;
 
-            $dest = TouristDestination::updateOrCreate(
+            $dest = TouristDestination::withTrashed()->updateOrCreate(
                 ['slug' => $destData['slug']],
                 $destData
             );
+            if ($dest->trashed()) {
+                $dest->restore();
+            }
 
             // Seed gallery items
             foreach ($gallery as $index => $item) {
