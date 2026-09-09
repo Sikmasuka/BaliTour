@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -24,6 +27,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (App::environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        // Prevent lazy loading, unfillable attribute assignment, and accessing missing attributes during local dev
+        Model::shouldBeStrict(! App::environment('production'));
+
         // 1. GLOBAL PASSWORD SECURITY RULES
         // Requires minimum 8 characters and checks against compromised/leaked password databases.
         Password::defaults(function () {
